@@ -1,0 +1,25 @@
+function dx = vehicleDynamicsEOM(~, x, input, params) % 定义车辆动力学状态方程
+vy = x(1); % 车辆侧向速度状态
+r = x(2); % 车辆横摆角速度状态
+psi = x(3); % 航向角状态
+X = x(4); % 车辆 X 方向位置状态
+Y = x(5); % 车辆 Y 方向位置状态
+v = params.vehicleSpeed; % 车辆等速纵向速度
+betaFront = atan2(vy + params.lf * r, v); % 前轮侧偏角
+betaRear = atan2(vy - params.lr * r, v); % 后轮侧偏角
+alphaFront = input.delta - betaFront; % 前轮轮胎侧偏角
+alphaRear = -betaRear; % 后轮轮胎侧偏角
+kappa = 0; % 假设无纵向滑移
+Fzf = params.massFront * params.g / 2; % 单个前轮法向载荷
+Fzr = params.massRear * params.g / 2; % 单个后轮法向载荷
+[FxFront, FyFront] = pacejkaTireForces(alphaFront, kappa, Fzf, params); % 计算前轮力
+[FxRear, FyRear] = pacejkaTireForces(alphaRear, kappa, Fzr, params); % 计算后轮力
+FyTotal = 2 * FyFront + 2 * FyRear; % 汇总四轮侧向力
+Mz = 2 * FyFront * params.lf - 2 * FyRear * params.lr; % 计算绕质心的横摆力矩
+dvy = FyTotal / params.m - r * v; % 侧向速度导数
+dr = Mz / params.Iz; % 横摆角速度导数
+dpsi = r; % 航向角导数
+dX = v * cos(psi) - vy * sin(psi); % X 方向速度
+dY = v * sin(psi) + vy * cos(psi); % Y 方向速度
+dx = [dvy; dr; dpsi; dX; dY]; % 返回状态导数
+end % 函数结束
