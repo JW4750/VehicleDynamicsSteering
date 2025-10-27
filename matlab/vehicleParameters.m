@@ -1,0 +1,20 @@
+function params = vehicleParameters() % 定义返回车辆参数的函数
+params.m = 1500; % 车辆质量，单位 kg
+params.Iz = 2250; % 绕垂直轴转动惯量，单位 kg*m^2
+params.lf = 1.2; % 质心到前轴距离，单位 m
+params.lr = 1.6; % 质心到后轴距离，单位 m
+params.Caf = 80000; % 前轴等效侧偏刚度，单位 N/rad
+params.Car = 80000; % 后轴等效侧偏刚度，单位 N/rad
+params.Cxf = 50000; % 前轮纵向刚度，单位 N
+params.Cxr = 50000; % 后轮纵向刚度，单位 N
+params.mu = 0.9; % 轮胎与地面摩擦系数
+params.g = 9.81; % 重力加速度，单位 m/s^2
+params.steeringRatio = 15.0; % 方向盘转角与轮角转换比
+params.steeringTimeConstant = 0.15; % 转向系统一阶滞后时间常数，单位 s
+params.vehicleSpeed = 30 / 3.6; % 车辆纵向速度，30 km/h 转换为 m/s
+params.simTime = 10.0; % 仿真时长，单位 s
+params.steeringStep = deg2rad(5); % 左转方向盘阶跃角度，单位 rad
+params.massFront = params.m * params.lr / (params.lf + params.lr); % 前轴静载荷，单位 kg
+params.massRear = params.m * params.lf / (params.lf + params.lr); % 后轴静载荷，单位 kg
+params.gravityForce = params.m * params.g; % 重力，单位 N
+end % 函数结束
